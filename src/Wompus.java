@@ -19,11 +19,11 @@ public class Wompus extends Creature {
 
         ArrayList<Graph.Node> myNeighbors = new ArrayList<>(getCurrentRoom().getNeighbors().values());
 
+        if(myNeighbors.size() == 0) return getCurrentRoom();
+
         for(Graph.Node n: myNeighbors){
             if(!nonNeighborsToPlayer.contains(n)) nonNeighborsToPlayer.remove(n);
         }
-
-        if(nonNeighborsToPlayer.size() == 0) return getCurrentRoom();
 
         int rand = (int)(nonNeighborsToPlayer.size()*Math.random());
         return nonNeighborsToPlayer.get(rand);

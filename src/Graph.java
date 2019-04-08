@@ -11,6 +11,18 @@ public class Graph {
         nodes = new HashMap<>();
     }
 
+    public static void printCreatures(Node currentRoom) {
+        ArrayList<Creature> list = currentRoom.getCreatures();
+        if(list.size() == 0) {
+            System.out.print("None");
+        }
+        else{
+            for(Creature c: list){
+                System.out.print(c.getName() + " the " + c.getType() + ", ");
+            }
+        }
+    }
+
     public void addNode(String name, String description) {
         Node n = new Node(name, description);
         nodes.put(name, n);

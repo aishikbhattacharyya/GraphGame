@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
@@ -38,7 +39,8 @@ public class Main {
 
             if (command.equals("go")) {
                 String room = response.substring(3);
-                if(g.getNode(room) != null) player.setCurrentRoom(g.getNode(room));
+                HashMap<String, Graph.Node> map = player.getCurrentRoom().getNeighbors();
+                if(map.get(room) != null) player.setCurrentRoom(g.getNode(room));
                 else System.out.println("Room invalid");
                 //current = g.getNode(room);
             } else if (command.equals("look")) {
@@ -46,7 +48,7 @@ public class Main {
                 System.out.println("Current items: " + player.getCurrentRoom().displayItems());
                 System.out.println(player.getCurrentRoom().getDescription());
                 System.out.print("Current Creature(s): ");
-                player.printCreatures();
+                Graph.printCreatures(player.getCurrentRoom());
                 System.out.println();
             } else if (command.equals("add") && response.contains("room")) {
                 String room = response.substring(9);
@@ -78,6 +80,7 @@ public class Main {
             }
 
             chicken.move(g);
+            System.out.println("CCC" + chicken.getCurrentRoom().getName());
             wompus.move(g);
 
         } while (!response.equals("quit"));

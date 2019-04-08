@@ -55,6 +55,7 @@ public abstract class Creature {
 
     public static void randomizeRoom(Graph g){
          ArrayList<Graph.Node> rooms = new ArrayList<>(currentRoom.getNeighbors().values());
+         if(rooms.size() == 0) return;
          int rand = (int)(rooms.size()*Math.random());
          Graph.Node nextRoom = rooms.get(rand);
 
