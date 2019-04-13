@@ -6,26 +6,33 @@ public class Wompus extends Creature {
         super(name, description, currentRoom, player, "wompus");
     }
 
-    public static void move(Graph g){
+    public void move(Graph g){
+        boolean shouldMove = checkToMove();
+        if(!shouldMove) return;
+
         Graph.Node playerRoom = player.getCurrentRoom();
+        Graph.Node roomToMove = getRoomAwayFromPlayer(playerRoom);
 
-        Graph.Node roomToMove = getRoomAwayFromPlayer(playerRoom, g);
-
-        getCurrentRoom().transferCreature(getCurrentRoom(), roomToMove, getName());
+        if(getCurrentRoom().equals(roomToMove)) return;
+        getCurrentRoom().transferCreature(this.getCurrentRoom(), roomToMove, getName());
     }
 
-    private static Graph.Node getRoomAwayFromPlayer(Graph.Node playerRoom, Graph g) {
-        ArrayList<Graph.Node> nonNeighborsToPlayer = playerRoom.getNonNeighbors();
 
+    private Graph.Node getRoomAwayFromPlayer(Graph.Node playerRoom) {
+        ArrayList<Graph.Node> roomsAwayFromPlayer = playerRoom.getRoomsAwayFromMe();
         ArrayList<Graph.Node> myNeighbors = new ArrayList<>(getCurrentRoom().getNeighbors().values());
+
+        ArrayList<Graph.Node> availableRooms = new ArrayList<>();
 
         if(myNeighbors.size() == 0) return getCurrentRoom();
 
         for(Graph.Node n: myNeighbors){
-            if(!nonNeighborsToPlayer.contains(n)) nonNeighborsToPlayer.remove(n);
+            if(roomsAwayFromPlayer.contains(n)) availableRooms.add(n);
         }
 
-        int rand = (int)(nonNeighborsToPlayer.size()*Math.random());
-        return nonNeighborsToPlayer.get(rand);
+        if(availableRooms.size() == 0) return getCurrentRoom();
+
+        int rand = (int)(availableRooms.size()*Math.random());
+        return availableRooms.get(rand);
     }
 }
