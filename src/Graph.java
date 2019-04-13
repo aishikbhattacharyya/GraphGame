@@ -75,12 +75,13 @@ public class Graph {
         }
 
         public String getNeighborNames(){
-            String s = "";
+            String str = "";
 
             for(String n: neighbors.keySet()){
-                s += n + " ";
+                str += n + ", ";
             }
-            return s;
+            if(str.equals("")) return "None";
+            return str.substring(0, str.length() - 2);
         }
 
         public Node getNeighbor(String name){
@@ -168,6 +169,7 @@ public class Graph {
                     break;
                 }
             }
+            c.setCurrentRoom(n2);
             list2.add(c);
             n1.setCreatures(list1);
             n2.setCreatures(list2);
@@ -182,7 +184,14 @@ public class Graph {
             for(Graph.Node n: allRoomNames){
                 if(!currRoomNeighbors.contains(n)) nonNeighbors.add(n);
             }
+            nonNeighbors.remove(this);
             return nonNeighbors;
+        }
+
+        public ArrayList<Node> getRoomsAwayFromMe() {
+            ArrayList<Graph.Node> allRoomNames = new ArrayList<>(nodes.values());
+            allRoomNames.remove(this);
+            return allRoomNames;
         }
     }
 }
