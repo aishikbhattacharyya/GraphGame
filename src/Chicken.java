@@ -4,7 +4,7 @@ public class Chicken extends Creature {
         super(name, description, currentRoom, player, "chicken");
     }
 
-    public void move(Graph g){
-        randomizeRoom(g);
+    public void move(){
+        randomizeRoom();
     }
 }

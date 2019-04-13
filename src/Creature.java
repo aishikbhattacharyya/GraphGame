@@ -67,7 +67,6 @@ public abstract class Creature {
 
     protected boolean checkToMove() {
         ArrayList<Graph.Node> myNeighbors = new ArrayList<>(getCurrentRoom().getNeighbors().values());
-        ArrayList<Graph.Node> theNeighborsOfMyNeighbors = new ArrayList<>();
 
         Graph.Node playerRoom = player.getCurrentRoom();
 
