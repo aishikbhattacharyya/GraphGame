@@ -6,12 +6,12 @@ public class Main {
 
     public static void main(String[] args) {
         Graph g = constructGraph();
+        HashMap<String, Command> commands = getCommands();
 
         Player player = new Player("Johnny", "Elite");
         player.setCurrentRoom(g.getNode("hall"));
 
         Chicken chicken = new Chicken("Randy", "fat", g.getNode("hall"), player);
-        chicken.move();
         Wompus wompus = new Wompus("Charlie", "dompus", g.getNode("closet"), player);
         Popstar popstar = new Popstar("Shelly", "stalker", g.getNode("hall"), player);
 
@@ -29,15 +29,22 @@ public class Main {
             response = s.nextLine();
 
             String command = parseResponse(response);
-
-            executeCommand(response, command, player, g, s);
+            executeCommand(response, command, player, g, s, commands);
 
             moveCharacters(creatures);
 
-            System.out.println("CCC" + wompus.getCurrentRoom().getName());
-
         } while (!response.equals("quit"));
 
+    }
+
+    private static HashMap<String,Command> getCommands() {
+        HashMap<String, Command> map = new HashMap<>();
+        map.put("add", new AddRoomCommand());
+        map.put("drop", new DropCommand());
+        map.put("go", new GoCommand());
+        map.put("look", new LookCommand());
+        map.put("take", new TakeCommand());
+        return map;
     }
 
     private static String parseResponse(String response) {
@@ -69,26 +76,13 @@ public class Main {
     }
 
 
-    private static void executeCommand(String response, String command, Player player, Graph g, Scanner s) {
-        Command c = null;
-
-        if (command.equals("go")) {
-            c = new GoCommand();
-        } else if (command.equals("look")) {
-            c = new LookCommand();
-        } else if (command.equals("add") && response.contains("room")) {
-            c = new AddRoomCommand();
-        }
-        else if(command.equals("take")){
-            c = new TakeCommand();
-        }
-        else if(command.equals("drop")){
-            c = new DropCommand();
-        }
-        else {
+    private static void executeCommand(String response, String command, Player player, Graph g, Scanner s, HashMap<String, Command> map) {
+        Command c = map.get(command);
+        if(c == null){
             System.out.println("Commands: go <roomname>, look, add room <roomname> quit");
+            return;
         }
 
-        if(c != null) c.execute(response, player, g, s);
+        c.execute(response, player, g, s);
     }
 }
