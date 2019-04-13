@@ -3,11 +3,11 @@ import java.util.Collections;
 import java.util.Set;
 
 public abstract class Creature {
-    private static Graph.Node currentRoom;
-    protected static Player player;
-    private static String name;
-    private static String description;
-    private static String type;
+    private Graph.Node currentRoom;
+    protected Player player;
+    private String name;
+    private String description;
+    private String type;
 
     public Creature(String name, String description, Graph.Node currentRoom, Player player, String type){
         this.name = name;
@@ -19,49 +19,67 @@ public abstract class Creature {
 
     }
 
-    public static Graph.Node getCurrentRoom() {
+    public Graph.Node getCurrentRoom() {
         return currentRoom;
     }
 
-    public static void setCurrentRoom(Graph.Node currentRoom) {
-        Creature.currentRoom = currentRoom;
+    public void setCurrentRoom(Graph.Node currentRoom) {
+        this.currentRoom = currentRoom;
     }
 
-    public static String getName() {
+    public String getName() {
         return name;
     }
 
-    public static void setName(String name) {
-        Creature.name = name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public static String getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public static void setDescription(String description) {
-        Creature.description = description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public static String getType() {
+    public String getType() {
         return type;
     }
 
-    public static void setType(String type) {
-        Creature.type = type;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public static void move(Graph.Node nextRoom){};
+    public void move(){};
 
-    public static void randomizeRoom(Graph g){
+    public void randomizeRoom(){
          ArrayList<Graph.Node> rooms = new ArrayList<>(currentRoom.getNeighbors().values());
          if(rooms.size() == 0) return;
          int rand = (int)(rooms.size()*Math.random());
          Graph.Node nextRoom = rooms.get(rand);
 
+         if(currentRoom.equals(nextRoom)) return;
          currentRoom.transferCreature(currentRoom, nextRoom, name);
 
          setCurrentRoom(nextRoom);
+    }
+
+    protected boolean checkToMove() {
+        ArrayList<Graph.Node> myNeighbors = new ArrayList<>(getCurrentRoom().getNeighbors().values());
+        ArrayList<Graph.Node> theNeighborsOfMyNeighbors = new ArrayList<>();
+
+        Graph.Node playerRoom = player.getCurrentRoom();
+
+        for(Graph.Node gn: myNeighbors){
+            if(gn.equals(playerRoom)) return true;
+            ArrayList<Graph.Node> currNeighbors = new ArrayList<>(gn.getNeighbors().values());
+            for(Graph.Node gn1: currNeighbors){
+                if(gn1.equals(playerRoom)) return true;
+            }
+        }
+
+        return false;
     }
 
 
